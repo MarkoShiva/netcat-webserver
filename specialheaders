@@ -1,0 +1,3 @@
+HTTP/1.1 200 OK\nContent-Length: 42\nCache-Control: no-cache\nExpires: 0\nContent-type: text/plain\r\n\r\n
+Yes of course Joker approves\r\n
+200\r\n\r\n

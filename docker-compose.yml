@@ -1,0 +1,75 @@
+version: "3.3"
+
+networks:
+  my-network:
+    driver: overlay #Network to connect the apps it is internal and created with docker-compose
+
+
+services:
+
+  bashserver:
+    image: in1t3r/devops-test:bash-tested
+    ports:
+      - 7000:7000  # ports exposed as we are using vip and not dnsrr
+                   # dnsrr might be better option although but it defaults
+    networks:
+      - my-network
+    volumes:
+      - testdata:/bin/testdata
+    deploy:
+      mode: replicated
+      replicas: 3       # Deploying 3 replicas in spread mode swarm
+      update_config:
+        parallelism: 2  # Update at most 2 versions of the app at the same time
+                        # maybe I'll try with 1 so that load balancing always have
+                        # at least 2 services.
+      restart_policy:
+        condition: on-failure  # self explainatory service will restart on failure
+
+# Test service for the application
+  testservice:
+    image: in1t3r/devops-test:test-tested
+    networks:
+      - my-network
+    depends_on:
+      - bashserver
+    deploy:
+      mode: replicated
+      replicas: 3
+      restart_policy:
+        condition: on-failure   # self explainatory service will restart on failure
+    volumes:
+      - testdata:/bin/testdata
+
+  visualiser:
+    image: dockersamples/visualizer
+    ports:
+      - "8080:8080"  # visualizer is not my app and in example I saw that it need
+    networks:
+      - my-network
+    volumes:
+      - type: bind
+        source: /var/run/docker.sock
+        target: /var/run/docker.sock # visualizer need permisions to access the swarm and docker
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+
+  database:
+    image: devopstest_database:latest
+    build: database/.
+    environment:
+      POSTGRES_PASSWORD: testpassword
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+volumes:
+  testdata:
+  db-data:
+      # database script is not written and will not be written. :)

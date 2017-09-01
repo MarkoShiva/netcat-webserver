@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo -e "HTTP/1.1 404 Not Found\nContent-Length: 9\nCache-Control: no-cache\nExpires: 0\nContent-type: text/plain\r\n\r\n"
+
+echo -e "400\r\n\r\n"

@@ -1,0 +1,18 @@
+# Using alpine as minimalistic distribution
+FROM alpine
+# Adding bash nc and shadow for chsh
+RUN apk -U add bash curl gawk coreutils
+# Changing a shell for root to /bin/bash
+RUN sed -i 's/ash$/bash/' /etc/passwd
+# Making directory /app
+RUN mkdir /bin/testdata
+# Adding needed files to the directory
+copy ./test.sh ./localtest.sh ./random.sh ./dictionary ./palindromes /bin/
+# setting workdirectory
+workdir /bin
+# pening up the port
+
+# Command that should be run by default
+# entry pint is not needed here because smehow alpine default to sh to run a script
+#cmd /bin/bash -c /bin/test.sh
+cmd /bin/bash -c /bin/test.sh

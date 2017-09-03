@@ -20,7 +20,7 @@ Also the logs of what is recived by the bashserver can be accessed via `docker s
 1. clone a repo
 2. install docker and docker-compose and docker-machine if needed
 3. start docker swarm with command `docker swarm init --advertise-addr address`
-4. run `docker stack deploy -c docker-compose myapp` to deploy a stack mozete onda pristupiti aplikaciji preko addressanode:7000
+4. run `docker stack deploy -c docker-compose myapp` to deploy a stack then you can access the app via stackaddress:7000 
 5. wait for services to deploy then run the command `curl -G http://address:7000 --data-urlencode "query"` will be checked whether is a palindrome. You can add any other script and add aditional headers if you want this was just a test of writing nc webserver that run in docker-swarm mode and understand HTTP in few days. :) It is GPLv3 repo as everything else I do exept for contracts. :)
 
 ## DONE
